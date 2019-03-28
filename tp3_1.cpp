@@ -7,30 +7,30 @@
 
     char Apellidos[6][10]={"f", "g", "hormiga", "i", "j"};
 
-    tyypedef struct 
+    typedef struct 
     {
 		TRaza Raza; //nota 1
 		char *ApellidoNombre; //nota 2
-		int edad; //entre 0 a 300
+		int Edad; //entre 0 a 300
 		double Salud; //100
 	}TDatos;
 
-	struct TCaracteristicas
+	typedef struct 
 	{
-		int velocidad;// 1 a 10
-		int destreza; //1 a 5
-		int fuerza;//1 a 10
+		int Velocidad;// 1 a 10
+		int Destreza; //1 a 5
+		int Fuerza;//1 a 10
 		int Nivel; //1 a 10
 		int Armadura; //1 a 10
-	};
+	}TCaracteristicas;
 
-	struct TPersonaje 
+	typedef struct  
 	{
 		TDatos * DatosPersonales;
 		TCaracteristicas * Caracteristicas;
-	};
+	}TPersonaje;
 
 int main()
 {
-	stru
+
 }
