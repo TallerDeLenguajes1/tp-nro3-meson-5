@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main()
-{
     enum TRaza{Orco, Humano, Mago, Enano, Elfo};
 
     char Nombres[6][10]={"ale", "b", "c", "d", "e"};
@@ -31,5 +29,8 @@ int main()
 		TDatos * DatosPersonales;
 		TCaracteristicas * Caracteristicas;
 	};
+
+int main()
+{
 
 }
