@@ -7,13 +7,13 @@
 
     char Apellidos[6][10]={"f", "g", "hormiga", "i", "j"};
 
-    struct TDatos 
+    tyypedef struct 
     {
 		TRaza Raza; //nota 1
 		char *ApellidoNombre; //nota 2
 		int edad; //entre 0 a 300
 		double Salud; //100
-	};
+	}TDatos;
 
 	struct TCaracteristicas
 	{
@@ -32,5 +32,5 @@
 
 int main()
 {
-
+	stru
 }
