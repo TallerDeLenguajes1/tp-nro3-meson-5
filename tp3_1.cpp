@@ -32,12 +32,48 @@
 		TCaracteristicas * Caracteristicas;
 	}TPersonaje;
 
-
+void CargarDatos(TPersonaje *);
 
 int main()
 {
+  
+     srand(time(NULL));
 
+    TPersonaje *prueba;
 
     return 0;
 }
+void CargarDatos(TPersonaje *datosACargar)
+{
+	datosACargar->DatosPersonales = (TDatos *)malloc(sizeof(TDatos));
+    datosACargar->DatosPersonales->Edad = rand()%301;
+    datosACargar->DatosPersonales->Salud = 100;
+    
+    int opApellido=rand()%5;
 
+    int Aleatorio=rand()%5;
+
+    strcpy(datosACargar->DatosPersonales->ApellidoNombre, Apellidos[opApellido]);
+
+    strcat(datosACargar->DatosPersonales->ApellidoNombre, " ");
+
+    strcat(datosACargar->DatosPersonales->ApellidoNombre, Nombres[Aleatorio]);
+
+    switch(Aleatorio){
+    	case 0: 
+    	       datosACargar->DatosPersonales->Raza = Orco;
+    	       break;
+    	case 1: 
+    	       datosACargar->DatosPersonales->Raza = Humano;
+    	       break;
+    	case 2: 
+    	       datosACargar->DatosPersonales->Raza = Mago;
+    	       break;
+    	case 3: 
+    	       datosACargar->DatosPersonales->Raza = Enano;
+    	       break;
+    	case 4: 
+    	       datosACargar->DatosPersonales->Raza = Elfo;
+    	       break;
+    }
+}
