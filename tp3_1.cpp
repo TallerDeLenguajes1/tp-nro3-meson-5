@@ -34,12 +34,18 @@
 
 void CargarDatos(TPersonaje *);
 
+void MostrarDatos(TPersonaje *);
+
 int main()
 {
   
      srand(time(NULL));
 
     TPersonaje *prueba;
+
+    CargarDatos(prueba);
+
+    MostrarDatos(prueba);
 
     return 0;
 }
@@ -76,4 +82,12 @@ void CargarDatos(TPersonaje *datosACargar)
     	       datosACargar->DatosPersonales->Raza = Elfo;
     	       break;
     }
+}
+
+void MostrarDatos(TPersonaje *datosAMostrar)
+{
+	printf("El personaje se llama: %s\n", datosAMostrar->DatosPersonales->ApellidoNombre);
+    printf("El personaje es de raza: %d\n", datosAMostrar->DatosPersonales->Raza);
+    printf("El personaje tiene una edad de: %d\n", datosAMostrar->DatosPersonales->Edad);
+    printf("El personaje tiene una salud de: %.2f\n", datosAMostrar->DatosPersonales->Salud);
 }
