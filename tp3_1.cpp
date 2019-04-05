@@ -33,19 +33,22 @@
 	}TPersonaje;
 
 void CargarDatos(TPersonaje *);
-
 void MostrarDatos(TPersonaje *);
+void CargarCaract(TCaracteristicas *Personaje);
+
 
 int main()
 {
-  
-     srand(time(NULL));
+    srand(time(NULL));
 
     TPersonaje *prueba;
+    TCaracteristicas *prueba2;
 
     CargarDatos(prueba);
 
     MostrarDatos(prueba);
+
+    CargarCaract(prueba2);
 
     return 0;
 }
@@ -90,4 +93,12 @@ void MostrarDatos(TPersonaje *datosAMostrar)
     printf("El personaje es de raza: %d\n", datosAMostrar->DatosPersonales->Raza);
     printf("El personaje tiene una edad de: %d\n", datosAMostrar->DatosPersonales->Edad);
     printf("El personaje tiene una salud de: %.2f\n", datosAMostrar->DatosPersonales->Salud);
+}
+void CargarCaract(TCaracteristicas *Personaje){
+   	Personaje = (TCaracteristicas *)malloc(sizeof(TCaracteristicas)); //No estoy seguro si hace falta la reserva
+    Personaje->Velocidad = 1 + rand()%((10+1)-1);
+    Personaje->Destreza = 1 + rand()%((5+1)-1);
+    Personaje->Fuerza = 1 + rand()%((10+1)-1);
+    Personaje->Nivel = 1 + rand()%((10+1)-1);
+    Personaje->Armadura = 1 + rand()%((10+1)-1);
 }
