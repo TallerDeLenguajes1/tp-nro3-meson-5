@@ -5,8 +5,8 @@
 
     enum TRaza {Orco, Humano, Mago, Enano, Elfo};
 
-    char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito"};
-    char Apellidos[6][10] = {"Caliente", "Urano", "Fulanita", "Purgador", "Mechudo"};
+    char Nombres[6][10] = {"Dengue","Naty","Elena","Chancho","Sergito","Ale"};
+    char Apellidos[6][10] = {"Caliente","Urano","Fulanita","Purgador","Mechudo","Prohibido"};
 
     typedef struct
     {
@@ -36,22 +36,32 @@ void MostrarDatos(TPersonaje *);
 void CargarCaract(TPersonaje *);
 void MostrarCaract(TPersonaje *);
 void CargarChar_Raza(TPersonaje *DatosRaza); //Traducir el entero del enum TRaza a caracteres
+void CargarNPersonajes (int , TPersonaje *);
 
 int main()
 {
     srand(time(NULL));
 
+    int cantitdadDePersonajes;
+
+   	TPersonaje *arregloDePersonajes=NULL;
+
    	TPersonaje *prueba;
    	prueba = (TPersonaje *)malloc(sizeof(TPersonaje));
 
    	CargarDatos(prueba);
-   
+
     MostrarDatos(prueba);
-   
+
    	CargarCaract(prueba);
-   
+
    	MostrarCaract(prueba);
-   
+
+    printf("Ingrese la cantidad de personajes que desea crear\n");
+   	scanf("%d", &cantitdadDePersonajes);
+
+   	CargarNPersonajes(cantitdadDePersonajes, arregloDePersonajes);
+
     return 0;
 }
 
@@ -60,30 +70,30 @@ void CargarDatos(TPersonaje *datosACargar)
 	datosACargar->DatosPersonales = (TDatos *)malloc(sizeof(TDatos));
     datosACargar->DatosPersonales->Edad = rand()%301;
     datosACargar->DatosPersonales->Salud = 100;
-    
+
     int opApellido=rand()%5;
     int Aleatorio=rand()%5;
 
 	datosACargar->DatosPersonales->ApellidoNombre = (char *)malloc(21*sizeof(char));
-    
+
     strcpy(datosACargar->DatosPersonales->ApellidoNombre, Apellidos[opApellido]);
     strcat(datosACargar->DatosPersonales->ApellidoNombre, " ");
     strcat(datosACargar->DatosPersonales->ApellidoNombre, Nombres[Aleatorio]);
-    
+
     switch(Aleatorio){
-    	case 0: 
+    	case 0:
     	       datosACargar->DatosPersonales->Raza = Orco;
     	       break;
-    	case 1: 
+    	case 1:
     	       datosACargar->DatosPersonales->Raza = Humano;
     	       break;
-    	case 2: 
+    	case 2:
     	       datosACargar->DatosPersonales->Raza = Mago;
     	       break;
-    	case 3: 
+    	case 3:
     	       datosACargar->DatosPersonales->Raza = Enano;
     	       break;
-    	case 4: 
+    	case 4:
     	       datosACargar->DatosPersonales->Raza = Elfo;
     	       break;
     }
@@ -97,7 +107,7 @@ void MostrarDatos(TPersonaje *datosAMostrar)
 }
 void CargarCaract(TPersonaje *Personaje)
 {
-  	Personaje->Caracteristicas = (TCaracteristicas *)malloc(sizeof(TCaracteristicas));	
+  	Personaje->Caracteristicas = (TCaracteristicas *)malloc(sizeof(TCaracteristicas));
     Personaje->Caracteristicas->Velocidad = 1 + rand()%((10+1)-1);
     Personaje->Caracteristicas->Destreza = 1 + rand()%((5+1)-1);
     Personaje->Caracteristicas->Fuerza = 1 + rand()%((10+1)-1);
@@ -114,21 +124,32 @@ void MostrarCaract(TPersonaje *Personaje)
 }
 void CargarChar_Raza(TPersonaje *DatosRaza)
 {
-   switch(DatosRaza->DatosPersonales->Raza){
-    	case 0: 
-    	       printf("Raza: Orco\n");
-    	       break;
-    	case 1: 
-    	        printf("Raza: Humano\n");
-    	       break;
-    	case 2: 
-    	        printf("Raza: Mago\n");
-    	       break;
-    	case 3: 
-    	        printf("Raza: Enano\n");
-    	       break;
-    	case 4: 
-    	        printf("Raza: Elfo\n");
-    	       break;
+	switch(DatosRaza->DatosPersonales->Raza){
+		case 0:
+			printf("Raza: Orco\n");
+			break;
+		case 1:
+			printf("Raza: Humano\n");
+			break;
+		case 2:
+			printf("Raza: Mago\n");
+			break;
+    	case 3:
+			printf("Raza: Enano\n");
+			break;
+		case 4:
+			printf("Raza: Elfo\n");
+			break;
    	}
+}
+
+void CargarNPersonajes(int numeroDePersonajes, TPersonaje *arregloDePersonajes)
+{
+    arregloDePersonajes = (TPersonaje *)malloc(sizeof(TPersonaje) * numeroDePersonajes);
+
+   	for(int i = 0; i < numeroDePersonajes; i++)
+    {
+        CargarDatos(arregloDePersonajes+i);
+        CargarCaract(arregloDePersonajes+i);
+    }
 }
