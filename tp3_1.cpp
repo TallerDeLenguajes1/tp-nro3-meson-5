@@ -5,8 +5,8 @@
 
     enum TRaza {Orco, Humano, Mago, Enano, Elfo};
 
-    char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito","Ale"};
-    char Apellidos[6][10] = {"Caliente", "Urano", "Fulanita", "Purgador", "Mechudo" , "Prohibido"};
+    char Nombres[6][10] = {"Dengue","Naty","Elena","Chancho","Sergito","Ale"};
+    char Apellidos[6][10] = {"Caliente","Urano","Fulanita","Purgador","Mechudo","Prohibido"};
 
     typedef struct
     {
@@ -114,21 +114,21 @@ void MostrarCaract(TPersonaje *Personaje)
 }
 void CargarChar_Raza(TPersonaje *DatosRaza)
 {
-   switch(DatosRaza->DatosPersonales->Raza){
-    	case 0: 
-    	       printf("Raza: Orco\n");
-    	       break;
-    	case 1: 
-    	        printf("Raza: Humano\n");
-    	       break;
-    	case 2: 
-    	        printf("Raza: Mago\n");
-    	       break;
+	switch(DatosRaza->DatosPersonales->Raza){
+		case 0: 
+			printf("Raza: Orco\n");
+			break;
+		case 1: 
+			printf("Raza: Humano\n");
+			break;
+		case 2: 
+			printf("Raza: Mago\n");
+			break;
     	case 3: 
-    	        printf("Raza: Enano\n");
-    	       break;
-    	case 4: 
-    	        printf("Raza: Elfo\n");
-    	       break;
+			printf("Raza: Enano\n");
+			break;
+		case 4: 
+			printf("Raza: Elfo\n");
+			break;
    	}
 }
