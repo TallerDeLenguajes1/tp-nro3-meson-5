@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#define PERSONAJES 3
+#define PERSONAJES 6
 
-	//Branch Deguer
+	//  BRANCH DEGUER //
 	enum TRaza {Orco, Humano, Mago, Enano, Elfo};
 
 	char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito"};
@@ -49,10 +49,8 @@ int main()
 	TPersonaje *PJ;
 	PJ = (TPersonaje *)malloc(sizeof(TPersonaje)*PERSONAJES);
 
-	CargarDatos(PJ);
-   
 	CargarPersonajes(PJ);
-	//MostrarPersonajes(PJ);
+	MostrarPersonajes(PJ);
 	//MostrarDatos(PJ);
    
 	//	CargarCaract(PJ);
@@ -144,13 +142,15 @@ void CargarChar_Raza(TPersonaje *DatosRaza)
 }
 void CargarPersonajes(TPersonaje *pjs){
 	TPersonaje *pjs_aux;
-	pjs_aux = *pjs;
+	
 	for (int i = 0; i < PERSONAJES; ++i){
-		*(pjs + i) = CargarDatos(pjs_aux);
+		CargarDatos(pjs_aux);
+		*(pjs + i) = *pjs_aux; //Para podes asignar
 	}
 }
-/*void MostrarPersonajes(TPersonaje*pjs){
+void MostrarPersonajes(TPersonaje *pjs){
 	for (int i = 0; i < PERSONAJES; ++i){
-		MostrarPersonajes(pjs);
+		MostrarDatos(pjs+i);
+		MostrarCaract(pjs+i);
 	}
-}*/
+}
