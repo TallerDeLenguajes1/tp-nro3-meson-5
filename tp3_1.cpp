@@ -3,11 +3,10 @@
 #include <time.h>
 #include <string.h>
 
-    enum TRaza{Orco, Humano, Mago, Enano, Elfo};
+    enum TRaza {Orco, Humano, Mago, Enano, Elfo};
 
-    char Nombres[6][10]={"Dengue", "Naty", "Sil", "Chancho", "Sergito"};
-
-    char Apellidos[6][10]={"Caliente", "Urano", "Fulanita", "Pestilent", "Mechudo"};
+    char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito"};
+    char Apellidos[6][10] = {"Caliente", "Urano", "Fulanita", "Purgador", "Mechudo"};
 
     typedef struct
     {
@@ -34,26 +33,28 @@
 
 void CargarDatos(TPersonaje *);
 void MostrarDatos(TPersonaje *);
-void CargarCaract(TCaracteristicas *Personaje);
-void MostrarCaract(TCaracteristicas *Personaje);
+void CargarCaract(TPersonaje *);
+void MostrarCaract(TPersonaje *);
+void CargarChar_Raza(TPersonaje *DatosRaza); //Traducir el entero del enum TRaza a caracteres
 
 int main()
 {
     srand(time(NULL));
 
-    TPersonaje *prueba;
-    TCaracteristicas *prueba2;
+   	TPersonaje *prueba;
+   	prueba = (TPersonaje *)malloc(sizeof(TPersonaje));
 
-    CargarDatos(prueba);
-
+   	CargarDatos(prueba);
+   
     MostrarDatos(prueba);
-
-    CargarCaract(prueba2);
-
-    MostrarCaract(prueba2);
-
+   
+   	CargarCaract(prueba);
+   
+   	MostrarCaract(prueba);
+   
     return 0;
 }
+
 void CargarDatos(TPersonaje *datosACargar)
 {
 	datosACargar->DatosPersonales = (TDatos *)malloc(sizeof(TDatos));
@@ -61,15 +62,14 @@ void CargarDatos(TPersonaje *datosACargar)
     datosACargar->DatosPersonales->Salud = 100;
     
     int opApellido=rand()%5;
-
     int Aleatorio=rand()%5;
 
+	datosACargar->DatosPersonales->ApellidoNombre = (char *)malloc(21*sizeof(char));
+    
     strcpy(datosACargar->DatosPersonales->ApellidoNombre, Apellidos[opApellido]);
-
     strcat(datosACargar->DatosPersonales->ApellidoNombre, " ");
-
     strcat(datosACargar->DatosPersonales->ApellidoNombre, Nombres[Aleatorio]);
-
+    
     switch(Aleatorio){
     	case 0: 
     	       datosACargar->DatosPersonales->Raza = Orco;
@@ -88,27 +88,47 @@ void CargarDatos(TPersonaje *datosACargar)
     	       break;
     }
 }
-
 void MostrarDatos(TPersonaje *datosAMostrar)
 {
-	printf("El personaje se llama: %s\n", datosAMostrar->DatosPersonales->ApellidoNombre);
-    printf("El personaje es de raza: %d\n", datosAMostrar->DatosPersonales->Raza);
-    printf("El personaje tiene una edad de: %d\n", datosAMostrar->DatosPersonales->Edad);
-    printf("El personaje tiene una salud de: %.2f\n", datosAMostrar->DatosPersonales->Salud);
+	printf("Nombre: %s\n", datosAMostrar->DatosPersonales->ApellidoNombre);
+	CargarChar_Raza(datosAMostrar);
+    printf("Edad: %d\n", datosAMostrar->DatosPersonales->Edad);
+    printf("Salud: %.2f\n", datosAMostrar->DatosPersonales->Salud);
 }
-void CargarCaract(TCaracteristicas *Personaje){
-    Personaje->Velocidad = 1 + rand()%((10+1)-1);
-    Personaje->Destreza = 1 + rand()%((5+1)-1);
-    Personaje->Fuerza = 1 + rand()%((10+1)-1);
-    Personaje->Nivel = 1 + rand()%((10+1)-1);
-    Personaje->Armadura = 1 + rand()%((10+1)-1);
-}
-
-void MostrarCaract(TCaracteristicas *Personaje)
+void CargarCaract(TPersonaje *Personaje)
 {
-	printf("El personaje tiene %d de Velocidad\n", Personaje->Velocidad);
-	printf("El personaje tiene %d de Destreza\n", Personaje->Destreza);
-	printf("El personaje tiene %d de Fuerza\n", Personaje->Fuerza);
-	printf("El personaje tiene %d de Nivel\n", Personaje->Nivel);
-	printf("El personaje tiene %d de Armadura\n", Personaje->Armadura);
+  	Personaje->Caracteristicas = (TCaracteristicas *)malloc(sizeof(TCaracteristicas));	
+    Personaje->Caracteristicas->Velocidad = 1 + rand()%((10+1)-1);
+    Personaje->Caracteristicas->Destreza = 1 + rand()%((5+1)-1);
+    Personaje->Caracteristicas->Fuerza = 1 + rand()%((10+1)-1);
+    Personaje->Caracteristicas->Nivel = 1 + rand()%((10+1)-1);
+    Personaje->Caracteristicas->Armadura = 1 + rand()%((10+1)-1);
+}
+void MostrarCaract(TPersonaje *Personaje)
+{
+	printf("Velocidad: %d\n", Personaje->Caracteristicas->Velocidad);
+	printf("Destreza: %d\n", Personaje->Caracteristicas->Destreza);
+    printf("Fuerza: %d\n", Personaje->Caracteristicas->Fuerza);
+    printf("Nivel: %d\n", Personaje->Caracteristicas->Nivel);
+    printf("Armadura: %d\n", Personaje->Caracteristicas->Armadura);
+}
+void CargarChar_Raza(TPersonaje *DatosRaza)
+{
+   switch(DatosRaza->DatosPersonales->Raza){
+    	case 0: 
+    	       printf("Raza: Orco\n");
+    	       break;
+    	case 1: 
+    	        printf("Raza: Humano\n");
+    	       break;
+    	case 2: 
+    	        printf("Raza: Mago\n");
+    	       break;
+    	case 3: 
+    	        printf("Raza: Enano\n");
+    	       break;
+    	case 4: 
+    	        printf("Raza: Elfo\n");
+    	       break;
+   	}
 }
