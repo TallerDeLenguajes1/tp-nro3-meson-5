@@ -5,8 +5,8 @@
 
     enum TRaza {Orco, Humano, Mago, Enano, Elfo};
 
-    char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito"};
-    char Apellidos[6][10] = {"Caliente", "Urano", "Fulanita", "Purgador", "Mechudo"};
+    char Nombres[6][10] = {"Dengue", "Naty", "Elena", "Chancho", "Sergito","Ale"};
+    char Apellidos[6][10] = {"Caliente", "Urano", "Fulanita", "Purgador", "Mechudo" , "Prohibido"};
 
     typedef struct
     {
