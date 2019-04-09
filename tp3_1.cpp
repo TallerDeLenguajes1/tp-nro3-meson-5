@@ -37,6 +37,7 @@ void CargarCaract(TPersonaje *);
 void MostrarCaract(TPersonaje *);
 void CargarChar_Raza(TPersonaje *DatosRaza); //Traducir el entero del enum TRaza a caracteres
 void CargarNPersonajes (int , TPersonaje *);
+void Danios(TPersonaje *, TPersonaje *);
 
 int main()
 {
@@ -61,6 +62,11 @@ int main()
    	scanf("%d", &cantitdadDePersonajes);
 
    	CargarNPersonajes(cantitdadDePersonajes, arregloDePersonajes);
+
+   	for(int i = 0; i<3; i++)
+   	{
+
+   	}
 
     return 0;
 }
@@ -152,4 +158,62 @@ void CargarNPersonajes(int numeroDePersonajes, TPersonaje *arregloDePersonajes)
         CargarDatos(arregloDePersonajes+i);
         CargarCaract(arregloDePersonajes+i);
     }
+}
+
+void Danios(TPersonaje *personaje1, TPersonaje *personaje2)
+{
+	int PD1 = personaje1->Caracteristicas->Destreza * personaje1->Caracteristicas->Fuerza * personaje1->Caracteristicas->Nivel;
+	int PD2 = personaje2->Caracteristicas->Destreza * personaje2->Caracteristicas->Fuerza * personaje2->Caracteristicas->Nivel;
+
+	int ED1 = 1 + rand()%100;
+	int ED2 = 1 + rand()%100;
+
+	int VA1 = PD1*ED1;
+	int VA2 = PD2*ED2;
+
+	int PDEF1 = personaje1->Caracteristicas->Velocidad * personaje1->Caracteristicas->Armadura;
+	int PDEF2 = personaje2->Caracteristicas->Velocidad * personaje2->Caracteristicas->Armadura;
+
+	int MDP = 50000;
+
+	int DP1 = ((VA1-PDEF1)/MDP)*100;
+	int DP2 = ((VA2-PDEF2)/MDP)*100;
+
+	personaje1->DatosPersonales->Salud = personaje1->DatosPersonales->Salud - DP2;
+	personaje2->DatosPersonales->Salud = personaje2->DatosPersonales->Salud - DP1;
+}
+
+void Recuento(TPersonaje *personaje1, TPersonaje *personaje2)
+{
+	if (personaje1->DatosPersonales->Salud == 0 || personaje2->DatosPersonales->Salud == 0)
+	{
+		if (personaje1->DatosPersonales->Salud == 0)
+		{
+			printf("La salud del personaje 1 llego a cero. El personaje 2 gana\n");
+		}
+		else
+		{
+			printf("La salud del personaje 2 llego a cero. El personaje 1 gana\n");
+		}
+	}
+	else
+	{
+		printf("La salud del jugador 1 es de %d\n", personaje1->DatosPersonales->Salud);
+		printf("La salud del jugador 2 es de %d\n", personaje2->DatosPersonales->Salud);
+	}
+}
+
+void Ganador(TPersonaje *personaje1, TPersonaje *personaje2)
+{
+	if (personaje1->DatosPersonales->Salud != 0 && personaje2->DatosPersonales->Salud != 0)
+	{
+		if (personaje1->DatosPersonales->Salud > personaje2->DatosPersonales->Salud)
+		{
+			printf("El jugador 1 Gana\n");
+		}
+		else
+		{
+			printf("El jugador 2 Gana\n");
+		}
+	}
 }
