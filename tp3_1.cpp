@@ -37,7 +37,11 @@ void CargarCaract(TPersonaje *);
 void MostrarCaract(TPersonaje *);
 void CargarChar_Raza(TPersonaje *DatosRaza); //Traducir el entero del enum TRaza a caracteres
 void CargarNPersonajes (int , TPersonaje *);
+void MostrarPersonajes(TPersonaje *, int);
+void Seleccion(TPersonaje *, TPersonaje *, TPersonaje *);
 void Danios(TPersonaje *, TPersonaje *);
+void Recuento(TPersonaje *, TPersonaje *);
+void Ganador(TPersonaje *, TPersonaje *);
 
 int main()
 {
@@ -45,28 +49,37 @@ int main()
 
     int cantitdadDePersonajes;
 
-   	TPersonaje *arregloDePersonajes=NULL;
+   	TPersonaje *arregloDePersonajes;
 
-   	TPersonaje *prueba;
-   	prueba = (TPersonaje *)malloc(sizeof(TPersonaje));
+   	TPersonaje *jugador1 = (TPersonaje *)malloc(sizeof(TPersonaje));
 
-   	CargarDatos(prueba);
-
-    MostrarDatos(prueba);
-
-   	CargarCaract(prueba);
-
-   	MostrarCaract(prueba);
+   	TPersonaje *jugador2 = (TPersonaje *)malloc(sizeof(TPersonaje));
 
     printf("Ingrese la cantidad de personajes que desea crear\n");
    	scanf("%d", &cantitdadDePersonajes);
 
+   	arregloDePersonajes = (TPersonaje *)malloc(sizeof(TPersonaje) * cantitdadDePersonajes);
+
    	CargarNPersonajes(cantitdadDePersonajes, arregloDePersonajes);
+
+   	MostrarPersonajes(arregloDePersonajes, cantitdadDePersonajes);
+
+   	Seleccion(jugador1, jugador2, arregloDePersonajes);
+
+   	printf("\n");
+   	getchar();
 
    	for(int i = 0; i<3; i++)
    	{
 
+        printf("Ronda %d A PELEAR <presione una tecla>", i+1);
+        getchar();
+        Danios(jugador1, jugador2);
+        Recuento(jugador1, jugador2);
+        printf("\n");
    	}
+
+    Ganador(jugador1, jugador2);
 
     return 0;
 }
@@ -151,8 +164,6 @@ void CargarChar_Raza(TPersonaje *DatosRaza)
 
 void CargarNPersonajes(int numeroDePersonajes, TPersonaje *arregloDePersonajes)
 {
-    arregloDePersonajes = (TPersonaje *)malloc(sizeof(TPersonaje) * numeroDePersonajes);
-
    	for(int i = 0; i < numeroDePersonajes; i++)
     {
         CargarDatos(arregloDePersonajes+i);
@@ -160,24 +171,51 @@ void CargarNPersonajes(int numeroDePersonajes, TPersonaje *arregloDePersonajes)
     }
 }
 
+void MostrarPersonajes(TPersonaje *pjs, int numeroDePersonajes){
+	for (int i = 0; i < numeroDePersonajes; ++i)
+    {
+        printf("Personaje %d ", i+1);
+		MostrarDatos(pjs+i);
+		MostrarCaract(pjs+i);
+		printf("\n");
+	}
+}
+
+void Seleccion(TPersonaje *jugador1, TPersonaje *jugador2, TPersonaje *arregloDePersonajes)
+{
+    int elecion1, eleccion2;
+
+    printf("Jugador uno, elija su personaje\n");
+    scanf("%d", &elecion1);
+
+    jugador1->Caracteristicas = (arregloDePersonajes+elecion1-1)->Caracteristicas;
+    jugador1->DatosPersonales = (arregloDePersonajes+elecion1-1)->DatosPersonales;
+
+    printf("Jugador dos, elija su personaje\n");
+    scanf("%d", &eleccion2);
+
+    jugador2->Caracteristicas = (arregloDePersonajes+eleccion2-1)->Caracteristicas;
+    jugador2->DatosPersonales = (arregloDePersonajes+eleccion2-1)->DatosPersonales;
+}
+
 void Danios(TPersonaje *personaje1, TPersonaje *personaje2)
 {
-	int PD1 = personaje1->Caracteristicas->Destreza * personaje1->Caracteristicas->Fuerza * personaje1->Caracteristicas->Nivel;
-	int PD2 = personaje2->Caracteristicas->Destreza * personaje2->Caracteristicas->Fuerza * personaje2->Caracteristicas->Nivel;
+	float PD1 = personaje1->Caracteristicas->Destreza * personaje1->Caracteristicas->Fuerza * personaje1->Caracteristicas->Nivel;
+	float PD2 = personaje2->Caracteristicas->Destreza * personaje2->Caracteristicas->Fuerza * personaje2->Caracteristicas->Nivel;
 
-	int ED1 = 1 + rand()%100;
-	int ED2 = 1 + rand()%100;
+	float ED1 = 1 + rand()%100;
+	float ED2 = 1 + rand()%100;
 
-	int VA1 = PD1*ED1;
-	int VA2 = PD2*ED2;
+	float VA1 = PD1*ED1;
+	float VA2 = PD2*ED2;
 
-	int PDEF1 = personaje1->Caracteristicas->Velocidad * personaje1->Caracteristicas->Armadura;
-	int PDEF2 = personaje2->Caracteristicas->Velocidad * personaje2->Caracteristicas->Armadura;
+	float PDEF1 = personaje1->Caracteristicas->Velocidad * personaje1->Caracteristicas->Armadura;
+	float PDEF2 = personaje2->Caracteristicas->Velocidad * personaje2->Caracteristicas->Armadura;
 
-	int MDP = 50000;
+	float MDP = 50000;
 
-	int DP1 = ((VA1-PDEF1)/MDP)*100;
-	int DP2 = ((VA2-PDEF2)/MDP)*100;
+	double DP1 = (double)(((VA1-PDEF1)/MDP)*100);
+	double DP2 = (double)(((VA2-PDEF2)/MDP)*100);
 
 	personaje1->DatosPersonales->Salud = personaje1->DatosPersonales->Salud - DP2;
 	personaje2->DatosPersonales->Salud = personaje2->DatosPersonales->Salud - DP1;
@@ -185,9 +223,9 @@ void Danios(TPersonaje *personaje1, TPersonaje *personaje2)
 
 void Recuento(TPersonaje *personaje1, TPersonaje *personaje2)
 {
-	if (personaje1->DatosPersonales->Salud == 0 || personaje2->DatosPersonales->Salud == 0)
+	if (personaje1->DatosPersonales->Salud <= 0 || personaje2->DatosPersonales->Salud <= 0)
 	{
-		if (personaje1->DatosPersonales->Salud == 0)
+		if (personaje1->DatosPersonales->Salud <= 0)
 		{
 			printf("La salud del personaje 1 llego a cero. El personaje 2 gana\n");
 		}
@@ -198,8 +236,8 @@ void Recuento(TPersonaje *personaje1, TPersonaje *personaje2)
 	}
 	else
 	{
-		printf("La salud del jugador 1 es de %d\n", personaje1->DatosPersonales->Salud);
-		printf("La salud del jugador 2 es de %d\n", personaje2->DatosPersonales->Salud);
+		printf("La salud del jugador 1 es de %.2f\n", personaje1->DatosPersonales->Salud);
+		printf("La salud del jugador 2 es de %.2f\n", personaje2->DatosPersonales->Salud);
 	}
 }
 
@@ -213,7 +251,14 @@ void Ganador(TPersonaje *personaje1, TPersonaje *personaje2)
 		}
 		else
 		{
-			printf("El jugador 2 Gana\n");
+			if (personaje1->DatosPersonales->Salud == personaje2->DatosPersonales->Salud)
+            {
+                printf("EMPATE");
+            }
+            else
+            {
+                printf("El jugador 2 Gana\n");
+            }
 		}
 	}
 }
