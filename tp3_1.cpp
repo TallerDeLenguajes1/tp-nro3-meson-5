@@ -31,25 +31,37 @@
 		TCaracteristicas * Caracteristicas;
 	}TPersonaje;
 
+	typedef struct Nodo
+	{
+		TPersonaje *personaje;
+		struct Nodo * siguiente;
+
+	} ListaPersonajes;
+
 void CargarDatos(TPersonaje *);
 void MostrarDatos(TPersonaje *);
 void CargarCaract(TPersonaje *);
 void MostrarCaract(TPersonaje *);
 void CargarChar_Raza(TPersonaje *DatosRaza); //Traducir el entero del enum TRaza a caracteres
 void CargarNPersonajes (int , TPersonaje *);
-void MostrarPersonajes(TPersonaje *, int);
-void Seleccion(TPersonaje *, TPersonaje *, TPersonaje *);
+void MostrarPersonajes(ListaPersonajes *);
+void Seleccion(TPersonaje *, TPersonaje *, ListaPersonajes *);
 void Danios(TPersonaje *, TPersonaje *);
 void Recuento(TPersonaje *, TPersonaje *);
 void Ganador(TPersonaje *, TPersonaje *);
+ListaPersonajes *CargarPersonaje(ListaPersonajes *);
+void EliminarNodo (ListaPersonajes *);
+void BorrarPersonaje_N (ListaPersonajes *, int);
+void AgregarPersonaje (ListaPersonajes *);
+
 
 int main()
 {
     srand(time(NULL));
 
-    int cantitdadDePersonajes;
+    int cantitdadDePersonajes, personajeBorrar;
 
-   	TPersonaje *arregloDePersonajes;
+    ListaPersonajes *listaDeCompletaDePersonajes = NULL;
 
    	TPersonaje *jugador1 = (TPersonaje *)malloc(sizeof(TPersonaje));
 
@@ -58,13 +70,21 @@ int main()
     printf("Ingrese la cantidad de personajes que desea crear\n");
    	scanf("%d", &cantitdadDePersonajes);
 
-   	arregloDePersonajes = (TPersonaje *)malloc(sizeof(TPersonaje) * cantitdadDePersonajes);
+   	for (int i = 0; i < cantitdadDePersonajes; ++i)
+   	{
+   		listaDeCompletaDePersonajes = CargarPersonaje(listaDeCompletaDePersonajes);
+   	}
 
-   	CargarNPersonajes(cantitdadDePersonajes, arregloDePersonajes);
+   	MostrarPersonajes(listaDeCompletaDePersonajes);
 
-   	MostrarPersonajes(arregloDePersonajes, cantitdadDePersonajes);
+    printf("Ingrese el personaje que desea borrar\n");
+   	scanf("%d", &personajeBorrar);
 
-   	Seleccion(jugador1, jugador2, arregloDePersonajes);
+   	BorrarPersonaje_N(listaDeCompletaDePersonajes, personajeBorrar);
+
+   	MostrarPersonajes(listaDeCompletaDePersonajes);
+
+   	Seleccion(jugador1, jugador2, listaDeCompletaDePersonajes);
 
    	printf("\n");
    	getchar();
@@ -119,6 +139,7 @@ void CargarDatos(TPersonaje *datosACargar)
 }
 void MostrarDatos(TPersonaje *datosAMostrar)
 {
+    puts("---------------------------------");
 	printf("Nombre: %s\n", datosAMostrar->DatosPersonales->ApellidoNombre);
 	CargarChar_Raza(datosAMostrar);
     printf("Edad: %d\n", datosAMostrar->DatosPersonales->Edad);
@@ -171,31 +192,60 @@ void CargarNPersonajes(int numeroDePersonajes, TPersonaje *arregloDePersonajes)
     }
 }
 
-void MostrarPersonajes(TPersonaje *pjs, int numeroDePersonajes){
-	for (int i = 0; i < numeroDePersonajes; ++i)
-    {
-        printf("Personaje %d ", i+1);
-		MostrarDatos(pjs+i);
-		MostrarCaract(pjs+i);
-		printf("\n");
+void MostrarPersonajes(ListaPersonajes *listaDeCompletaDePersonajes)
+{
+	while(listaDeCompletaDePersonajes !=NULL)
+	{
+		MostrarDatos(listaDeCompletaDePersonajes->personaje);
+		MostrarCaract(listaDeCompletaDePersonajes->personaje);
+		listaDeCompletaDePersonajes = listaDeCompletaDePersonajes->siguiente;
 	}
+
 }
 
-void Seleccion(TPersonaje *jugador1, TPersonaje *jugador2, TPersonaje *arregloDePersonajes)
+void Seleccion(TPersonaje *jugador1, TPersonaje *jugador2, ListaPersonajes *listaDePersonajes)
 {
     int elecion1, eleccion2;
+
+    int contador = 0;
+
+    ListaPersonajes *aux;
+
+    aux = listaDePersonajes;
 
     printf("Jugador uno, elija su personaje\n");
     scanf("%d", &elecion1);
 
-    jugador1->Caracteristicas = (arregloDePersonajes+elecion1-1)->Caracteristicas;
-    jugador1->DatosPersonales = (arregloDePersonajes+elecion1-1)->DatosPersonales;
+    while (aux != NULL  && contador < (elecion1-1))
+    {
+        listaDePersonajes = listaDePersonajes->siguiente;
+        contador = contador + 1 ;
+    }
+
+    jugador1->Caracteristicas = listaDePersonajes->personaje->Caracteristicas;
+    jugador1->DatosPersonales = listaDePersonajes->personaje->DatosPersonales;
+
+    MostrarDatos(jugador1);
+    MostrarCaract(jugador1);
+
+    contador = 0;
+
+    listaDePersonajes = aux;
 
     printf("Jugador dos, elija su personaje\n");
     scanf("%d", &eleccion2);
 
-    jugador2->Caracteristicas = (arregloDePersonajes+eleccion2-1)->Caracteristicas;
-    jugador2->DatosPersonales = (arregloDePersonajes+eleccion2-1)->DatosPersonales;
+    while (aux != NULL  && contador < (eleccion2-1))
+    {
+        listaDePersonajes = listaDePersonajes->siguiente;
+        contador = contador + 1;
+    }
+
+    jugador2->Caracteristicas = listaDePersonajes->personaje->Caracteristicas;
+    jugador2->DatosPersonales = listaDePersonajes->personaje->DatosPersonales;
+
+    MostrarDatos(jugador2);
+    MostrarCaract(jugador2);
 }
 
 void Danios(TPersonaje *personaje1, TPersonaje *personaje2)
@@ -261,4 +311,93 @@ void Ganador(TPersonaje *personaje1, TPersonaje *personaje2)
             }
 		}
 	}
+}
+ListaPersonajes *CargarPersonaje(ListaPersonajes *start)
+{
+	ListaPersonajes *nuevo, *aux;
+
+	nuevo = (ListaPersonajes *) malloc(sizeof(ListaPersonajes));
+
+	nuevo->personaje = (TPersonaje *)malloc(sizeof(TPersonaje));
+
+	CargarDatos(nuevo->personaje);
+
+	CargarCaract(nuevo->personaje);
+
+	nuevo->siguiente = NULL;
+
+	if (start == NULL)
+    {
+        start = nuevo;
+        nuevo->siguiente = NULL;
+    }
+    else
+    {
+        aux = start;
+        start = nuevo;
+        nuevo->siguiente = aux;
+    }
+    return start;
+}
+
+void EliminarNodo (ListaPersonajes * nodoABorrar)
+{
+    if(nodoABorrar != NULL)
+    {
+        free(nodoABorrar);
+    }
+}
+
+void BorrarPersonaje_N (ListaPersonajes *listaAModificar, int personajeABorrar)
+{
+    int contador = 0;
+
+    ListaPersonajes * auxiliar = listaAModificar;
+
+    ListaPersonajes * anterior;
+
+    while (auxiliar != NULL && contador < (personajeABorrar-1))
+    {
+        anterior = auxiliar;
+        auxiliar = auxiliar->siguiente;
+        contador++;
+    }
+
+    if(auxiliar != NULL)
+    {
+        anterior->siguiente = auxiliar->siguiente;
+        EliminarNodo(auxiliar);
+    }
+}
+
+void AgregarPersonaje (ListaPersonajes *listaAModificar)
+{
+    int eleccion;
+
+    ListaPersonajes *auxiliar = listaAModificar;
+
+    printf("Si desea agregar un personaje al principio, elija 1, si lo desea al final elija 0\n");
+    scanf("%d", &eleccion);
+
+    if (eleccion == 1)
+    {
+        listaAModificar = CargarPersonaje(listaAModificar);
+    }
+
+    else
+    {
+        while(auxiliar->siguiente != NULL)
+        {
+            auxiliar = auxiliar->siguiente;
+        }
+
+        listaAModificar = CargarPersonaje(listaAModificar);
+
+
+    }
+}
+
+void CargarAlFinal (ListaPersonajes * listaParaCargar)
+{
+
 }
