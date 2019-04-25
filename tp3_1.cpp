@@ -51,8 +51,9 @@ void Recuento(TPersonaje *, TPersonaje *);
 void Ganador(TPersonaje *, TPersonaje *);
 ListaPersonajes *CargarPersonaje(ListaPersonajes *);
 void EliminarNodo (ListaPersonajes *);
-void BorrarPersonaje_N (ListaPersonajes *, int);
-void AgregarPersonaje (ListaPersonajes *);
+ListaPersonajes *BorrarPersonaje_N (ListaPersonajes *, int);
+ListaPersonajes *AgregarPersonaje (ListaPersonajes *);
+ListaPersonajes *CargarAlFinal (ListaPersonajes *);
 
 
 int main()
@@ -75,12 +76,22 @@ int main()
    		listaDeCompletaDePersonajes = CargarPersonaje(listaDeCompletaDePersonajes);
    	}
 
+    printf("\n");
+
    	MostrarPersonajes(listaDeCompletaDePersonajes);
+
+   	printf("\n");
 
     printf("Ingrese el personaje que desea borrar\n");
    	scanf("%d", &personajeBorrar);
 
-   	BorrarPersonaje_N(listaDeCompletaDePersonajes, personajeBorrar);
+    printf("\n");
+
+   	listaDeCompletaDePersonajes = BorrarPersonaje_N(listaDeCompletaDePersonajes, personajeBorrar);
+
+   	MostrarPersonajes(listaDeCompletaDePersonajes);
+
+   	listaDeCompletaDePersonajes = AgregarPersonaje(listaDeCompletaDePersonajes);
 
    	MostrarPersonajes(listaDeCompletaDePersonajes);
 
@@ -213,6 +224,8 @@ void Seleccion(TPersonaje *jugador1, TPersonaje *jugador2, ListaPersonajes *list
 
     aux = listaDePersonajes;
 
+    printf("\n");
+
     printf("Jugador uno, elija su personaje\n");
     scanf("%d", &elecion1);
 
@@ -231,6 +244,8 @@ void Seleccion(TPersonaje *jugador1, TPersonaje *jugador2, ListaPersonajes *list
     contador = 0;
 
     listaDePersonajes = aux;
+
+    printf("\n");
 
     printf("Jugador dos, elija su personaje\n");
     scanf("%d", &eleccion2);
@@ -348,7 +363,7 @@ void EliminarNodo (ListaPersonajes * nodoABorrar)
     }
 }
 
-void BorrarPersonaje_N (ListaPersonajes *listaAModificar, int personajeABorrar)
+ListaPersonajes *BorrarPersonaje_N (ListaPersonajes *listaAModificar, int personajeABorrar)
 {
     int contador = 0;
 
@@ -356,25 +371,62 @@ void BorrarPersonaje_N (ListaPersonajes *listaAModificar, int personajeABorrar)
 
     ListaPersonajes * anterior;
 
-    while (auxiliar != NULL && contador < (personajeABorrar-1))
+    if (personajeABorrar == 1)
     {
-        anterior = auxiliar;
-        auxiliar = auxiliar->siguiente;
-        contador++;
+        anterior = listaAModificar;
+
+        auxiliar = listaAModificar->siguiente;
+
+        EliminarNodo(anterior);
+
+        listaAModificar = auxiliar;
+
+        return listaAModificar;
+    }
+    else
+    {
+        while (auxiliar != NULL && contador < (personajeABorrar-1))
+        {
+            anterior = auxiliar;
+            auxiliar = auxiliar->siguiente;
+            contador++;
+        }
+
+        if(auxiliar != NULL)
+        {
+            anterior->siguiente = auxiliar->siguiente;
+            EliminarNodo(auxiliar);
+        }
+        return listaAModificar;
     }
 
-    if(auxiliar != NULL)
-    {
-        anterior->siguiente = auxiliar->siguiente;
-        EliminarNodo(auxiliar);
-    }
+
 }
 
-void AgregarPersonaje (ListaPersonajes *listaAModificar)
+ListaPersonajes *CargarAlFinal (ListaPersonajes * listaParaCargar)
+{
+    ListaPersonajes *nuevo = (ListaPersonajes *) malloc(sizeof(ListaPersonajes));
+
+	nuevo->personaje = (TPersonaje *)malloc(sizeof(TPersonaje));
+
+	CargarDatos(nuevo->personaje);
+
+	CargarCaract(nuevo->personaje);
+
+	nuevo->siguiente = NULL;
+
+    listaParaCargar = nuevo;
+
+    return listaParaCargar;
+}
+
+ListaPersonajes *AgregarPersonaje (ListaPersonajes *listaAModificar)
 {
     int eleccion;
 
     ListaPersonajes *auxiliar = listaAModificar;
+
+    printf("\n");
 
     printf("Si desea agregar un personaje al principio, elija 1, si lo desea al final elija 0\n");
     scanf("%d", &eleccion);
@@ -382,6 +434,8 @@ void AgregarPersonaje (ListaPersonajes *listaAModificar)
     if (eleccion == 1)
     {
         listaAModificar = CargarPersonaje(listaAModificar);
+
+        return listaAModificar;
     }
 
     else
@@ -391,13 +445,8 @@ void AgregarPersonaje (ListaPersonajes *listaAModificar)
             auxiliar = auxiliar->siguiente;
         }
 
-        listaAModificar = CargarPersonaje(listaAModificar);
+        auxiliar->siguiente = CargarAlFinal(auxiliar);
 
-
+        return listaAModificar;
     }
-}
-
-void CargarAlFinal (ListaPersonajes * listaParaCargar)
-{
-
 }
